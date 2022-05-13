@@ -59,9 +59,9 @@ local function frameOnLeave()
 end
 
 function frame:ApplySettings()
-    self:SetScale(ArenaWinTracker.Scale)
+    self:SetScale(ArenaScoreTracker.Scale)
 
-    if not ArenaWinTracker.Position_X and not ArenaWinTracker.Position_Y then
+    if not ArenaScoreTracker.Position_X and not ArenaScoreTracker.Position_Y then
         self:ClearAllPoints()
         self:SetPoint("CENTER", UIParent, "CENTER")
         debug("hier")
@@ -69,11 +69,11 @@ function frame:ApplySettings()
         self:ClearAllPoints()
         debug("dort")
         local scale = self:GetEffectiveScale()
-        self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", ArenaWinTracker.Position_X / scale, ArenaWinTracker.Position_Y / scale)
+        self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", ArenaScoreTracker.Position_X / scale, ArenaScoreTracker.Position_Y / scale)
     end
-    self.wins:SetEnabled(ArenaWinTracker.Editable)
-    self.loses:SetEnabled(ArenaWinTracker.Editable)
-    if ArenaWinTracker.Locked then
+    self.wins:SetEnabled(ArenaScoreTracker.Editable)
+    self.loses:SetEnabled(ArenaScoreTracker.Editable)
+    if ArenaScoreTracker.Locked then
         self.dragme:SetText("Locked")
     else
         self.dragme:SetText("Drag me")
@@ -83,7 +83,7 @@ function frame:ApplySettings()
 end
 
 function frame:OnDragStart()
-    return ArenaWinTracker.Locked or self:StartMoving()
+    return ArenaScoreTracker.Locked or self:StartMoving()
 end	
 
 
@@ -91,8 +91,8 @@ function frame:OnDragStop()
     self:StopMovingOrSizing()
    
     local scale = self:GetEffectiveScale()
-    ArenaWinTracker.Position_X = self:GetLeft() * scale
-    ArenaWinTracker.Position_Y = self:GetTop() * scale
+    ArenaScoreTracker.Position_X = self:GetLeft() * scale
+    ArenaScoreTracker.Position_Y = self:GetTop() * scale
 end
 
 frame:SetClampedToScreen(true)
@@ -156,11 +156,11 @@ local function CreateEditbox(parent, key)
     editbox:SetScript("OnEditFocusLost", function(self) 
         debug("OnEditFocusLost", self:GetText(), self.fs:GetUnboundedStringWidth(), (self:GetRegions()))
         if self:GetText() == "" then
-            ArenaWinTracker[self.key] = 0
+            ArenaScoreTracker[self.key] = 0
         else
-            ArenaWinTracker[self.key] = tonumber(self:GetText())
+            ArenaScoreTracker[self.key] = tonumber(self:GetText())
         end
-        self:SetText(ArenaWinTracker[self.key]) -- when the users enters like 009, this changes it to 9 and then OnTextChanged fires
+        self:SetText(ArenaScoreTracker[self.key]) -- when the users enters like 009, this changes it to 9 and then OnTextChanged fires
         C_Timer.After(0, function() 
             self.fs:SetWidth(self.fs:GetUnboundedStringWidth())
         end)
@@ -211,29 +211,29 @@ function frame:SetupOptions()
 	self.panel.locked:SetPoint("TOPLEFT", 20, -20)
 	self.panel.locked.Text:SetText("Locked")
 	self.panel.locked.SetValue = function(_, value)
-		ArenaWinTracker.Locked = (value == "1") -- value can be either "0" or "1"
+		ArenaScoreTracker.Locked = (value == "1") -- value can be either "0" or "1"
         frame:ApplySettings()
 	end
-	self.panel.locked:SetChecked(ArenaWinTracker.Locked) -- set the initial checked state
+	self.panel.locked:SetChecked(ArenaScoreTracker.Locked) -- set the initial checked state
 
     self.panel.editable = CreateFrame("CheckButton", nil, self.panel, "InterfaceOptionsCheckButtonTemplate")
 	self.panel.editable:SetPoint("TOPLEFT", self.panel.locked, "TOPLEFT", 0, -40)
 	self.panel.editable.Text:SetText("Editable score")
 	self.panel.editable.SetValue = function(_, value)
-		ArenaWinTracker.Editable = (value == "1") -- value can be either "0" or "1"
+		ArenaScoreTracker.Editable = (value == "1") -- value can be either "0" or "1"
         frame:ApplySettings()
 	end
-	self.panel.editable:SetChecked(ArenaWinTracker.Editable) -- set the initial checked state
+	self.panel.editable:SetChecked(ArenaScoreTracker.Editable) -- set the initial checked state
 
     self.panel.scale = CreateFrame("Slider", nil, self.panel, "OptionsSliderTemplate")
     self.panel.scale:SetMinMaxValues(3, 15)
-    self.panel.scale:SetValue(ArenaWinTracker.Scale)
+    self.panel.scale:SetValue(ArenaScoreTracker.Scale)
     self.panel.scale:SetValueStep(0.05)
 	self.panel.scale:SetPoint("TOPLEFT", self.panel.editable, "TOPLEFT", 0, -40)
 
     self.panel.scale:SetScript("OnValueChanged", function(self, value, userInput)
 		debug("You changed me!", value, userInput)
-        ArenaWinTracker.Scale = value
+        ArenaScoreTracker.Scale = value
         frame:ApplySettings()
 	end)
     self.panel.scale.Text:SetText("Scale")
@@ -261,13 +261,13 @@ StaticPopupDialogs["CONFIRM_OVERRITE_"..AddonName] = {
 }
 
 function frame:UpdateScore()
-    self.wins:SetText(ArenaWinTracker.Wins)
-    self.loses:SetText(ArenaWinTracker.Loses)
+    self.wins:SetText(ArenaScoreTracker.Wins)
+    self.loses:SetText(ArenaScoreTracker.Loses)
 end
 
 function frame:Reset()
-    ArenaWinTracker.Wins = 0 -- we have to do this magic because ottherwise we insert the additional space into the fontstring even tho nothing is about tho change
-    ArenaWinTracker.Loses = 0
+    ArenaScoreTracker.Wins = 0 -- we have to do this magic because ottherwise we insert the additional space into the fontstring even tho nothing is about tho change
+    ArenaScoreTracker.Loses = 0
     self:UpdateScore()
 end
 
@@ -287,13 +287,13 @@ frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function(self,event,...)
     if event == "PLAYER_LOGIN" then
         
-        ArenaWinTracker = ArenaWinTracker or {}
-        ArenaWinTracker.Wins = ArenaWinTracker.Wins or 0
-        ArenaWinTracker.Loses = ArenaWinTracker.Loses or 0
-        ArenaWinTracker.Scale = ArenaWinTracker.Scale or 3
-        ArenaWinTracker.Editable = ArenaWinTracker.Editable or false
+        ArenaScoreTracker = ArenaScoreTracker or {}
+        ArenaScoreTracker.Wins = ArenaScoreTracker.Wins or 0
+        ArenaScoreTracker.Loses = ArenaScoreTracker.Loses or 0
+        ArenaScoreTracker.Scale = ArenaScoreTracker.Scale or 3
+        ArenaScoreTracker.Editable = ArenaScoreTracker.Editable or false
 
-        --self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", ArenaWinTracker.Position_X / scale, ArenaWinTracker.Position_Y / scale)
+        --self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", ArenaScoreTracker.Position_X / scale, ArenaScoreTracker.Position_Y / scale)
 
         self:SetupOptions()
         self:ApplySettings()
@@ -308,9 +308,9 @@ frame:SetScript("OnEvent", function(self,event,...)
 		if zone == "arena" then
             local iWon = DidIWin(C_PvP_GetActiveMatchWinner(), GetBattlefieldArenaFaction())
             if iWon then
-                ArenaWinTracker.Wins = ArenaWinTracker.Wins + 1
+                ArenaScoreTracker.Wins = ArenaScoreTracker.Wins + 1
             elseif iWon == false then
-                ArenaWinTracker.Loses = ArenaWinTracker.Loses + 1
+                ArenaScoreTracker.Loses = ArenaScoreTracker.Loses + 1
             end
             self:UpdateScore()
         end

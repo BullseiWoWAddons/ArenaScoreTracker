@@ -95,7 +95,7 @@ globals = {
 	"AlertFrame",
 	"Ambiguate",
 	"ArenaEnemyFrames",
-	"ArenaWinTracker",
+	"ArenaScoreTracker",
 	"AuraUtil",
 	"BackdropTemplateMixin",
 	"BasicMessageDialog",
