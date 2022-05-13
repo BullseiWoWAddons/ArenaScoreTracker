@@ -10,15 +10,15 @@ local function debug(...)
     end
 end
 
-backdropInfo = {
+local backdropInfo = {
 	bgFile = "Interface\\Buttons\\WHITE8X8",
 	edgeFile = "Interface\\Buttons\\WHITE8X8",
 	edgeSize = 1,
 	insets = { left = 1, right = 1, top = 1, bottom = 1, },
 }
 
-ArenaWinTrackerFrame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-local frame = ArenaWinTrackerFrame 
+local frame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+
 frame:SetPoint("TOPLEFT")
 
 frame.dragme = frame:CreateFontString(nil, "OVERLAY")

@@ -8,3 +8,5 @@
 ## SavedVariablesPerCharacter: ArenaScoreTracker
 
 ## X-Curse-Project-ID: 623055
+
+ArenaScoreTracker.lua
