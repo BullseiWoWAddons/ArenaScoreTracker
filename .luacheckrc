@@ -190,6 +190,7 @@ globals = {
 	"GetTrackedAchievements",
 	"GetUnitName",
 	"InCombatLockdown",
+	"InterfaceOptions_AddCategory",
 	"IsAddOnLoaded",
 	"IsAddOnLoadOnDemand",
 	"IsAltKeyDown",
