@@ -2,6 +2,7 @@ local AddonName, Data = ...
 
 local GetBattlefieldArenaFaction = GetBattlefieldArenaFaction
 local C_PvP_GetActiveMatchWinner = C_PvP.GetActiveMatchWinner
+local InterfaceOptions_AddCategory = InterfaceOptions_AddCategory
 
 local debugg = false
 local function debug(...)
