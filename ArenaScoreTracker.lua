@@ -113,7 +113,6 @@ frame:SetScript("OnLeave", function(self, motion) debug("frame OnLeave") frameOn
 function frame:SetFrameWidth()
     frame:SetWidth(frame.wins:GetWidth()  + frame.dash:GetWidth() + frame.loses:GetWidth())
 end
-frameOnEnter()
 
 
 
@@ -138,6 +137,10 @@ local function CreateEditbox(parent, key)
     editbox:SetScript("OnEnter", function(self, motion) debug("frame OnEnter") frameOnEnter() end)
     editbox:SetScript("OnLeave", function(self, motion) debug("frame OnLeave") frameOnLeave() end)
     editbox:SetScript("OnSizeChanged", function(self, width, height)
+        
+        if self.fs:IsTruncated() then
+            self.fs:SetWidth(self.fs:GetUnboundedStringWidth())
+        end
         frame:SetFrameWidth()
     end)
     editbox:SetScript("OnTextChanged", function(self, userInput) 
@@ -146,6 +149,7 @@ local function CreateEditbox(parent, key)
         if userInput then
             self.fs:SetWidth(self.fs:GetUnboundedStringWidth()  + 10) --necessary, otherwise we exceed the length when typing and it doesnt work
         else
+            print("it fired")
             if not self.fs:GetText() then
                 debug("no fs text")
                 self.fs:SetText(self:GetText())
