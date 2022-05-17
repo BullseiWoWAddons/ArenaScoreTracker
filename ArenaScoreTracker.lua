@@ -149,7 +149,6 @@ local function CreateEditbox(parent, key)
         if userInput then
             self.fs:SetWidth(self.fs:GetUnboundedStringWidth()  + 10) --necessary, otherwise we exceed the length when typing and it doesnt work
         else
-            print("it fired")
             if not self.fs:GetText() then
                 debug("no fs text")
                 self.fs:SetText(self:GetText())
